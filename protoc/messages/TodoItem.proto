@@ -1,0 +1,11 @@
+syntax = "proto3";
+package todoapi.pb.messages;
+ 
+option csharp_namespace = "TodoApi.Pb.Messages";
+ 
+message TodoItemData {
+  int64 Id = 1;
+  string Title = 2;
+  string Description = 3;
+  bool IsComplete = 4;
+}

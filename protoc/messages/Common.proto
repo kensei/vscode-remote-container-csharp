@@ -1,0 +1,9 @@
+syntax = "proto3";
+package todoapi.pb.messages;
+ 
+option csharp_namespace = "TodoApi.Pb.Messages";
+ 
+message CommonDataResponse {
+  int32 ErrorCode = 1;
+  string ErrorMessage = 2;
+}

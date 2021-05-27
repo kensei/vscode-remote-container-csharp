@@ -1,0 +1,22 @@
+syntax = "proto3";
+package todoapi.pb.messages.todo;
+ 
+import "messages/TodoItem.proto";
+import "messages/Common.proto";
+
+option csharp_namespace = "TodoApi.Pb.Messages.Todo";
+
+message TodosGetResponse
+{
+  CommonDataResponse Common = 1;
+  repeated TodoItemData TodoItems = 2;
+}
+
+message TodoGetRequest {
+  int32 Id = 1;
+}
+message TodoGetResponse
+{
+  CommonDataResponse Common = 1;
+  TodoItemData TodoItem = 2;
+}

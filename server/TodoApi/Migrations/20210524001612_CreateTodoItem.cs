@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace server.Migrations
+namespace TodoApi.Migrations
 {
     public partial class CreateTodoItem : Migration
     {

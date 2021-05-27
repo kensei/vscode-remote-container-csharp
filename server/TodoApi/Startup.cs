@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,8 +13,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
+using TodoApi.Data;
 
-namespace server
+namespace TodoApi
 {
     public class Startup
     {
@@ -34,7 +36,17 @@ namespace server
                     .EnableSensitiveDataLogging()
                     .EnableDetailedErrors() // remove for production
                 );
-            services.AddControllers();
+            services.AddOptions();
+            services.Configure<MyOption>(options =>
+            {
+                options.IsLoggingJson = Configuration.GetValue<bool>("IsLoggingJson");
+            });
+            services.AddApiVersioning();
+            services.AddControllers(options =>
+            {
+                options.InputFormatters.Add(null);
+                options.OutputFormatters.Add(null);
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "server", Version = "v1" });

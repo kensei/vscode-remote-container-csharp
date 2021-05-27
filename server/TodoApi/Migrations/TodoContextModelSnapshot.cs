@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApi.Models;
 
-namespace server.Migrations
+namespace TodoApi.Migrations
 {
     [DbContext(typeof(TodoContext))]
     partial class TodoContextModelSnapshot : ModelSnapshot

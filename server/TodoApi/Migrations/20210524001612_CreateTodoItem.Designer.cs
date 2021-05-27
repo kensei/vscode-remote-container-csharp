@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApi.Models;
 
-namespace server.Migrations
+namespace TodoApi.Migrations
 {
     [DbContext(typeof(TodoContext))]
     [Migration("20210524001612_CreateTodoItem")]
