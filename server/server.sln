@@ -5,7 +5,7 @@ VisualStudioVersion = 16.6.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoApi", "TodoApi\TodoApi.csproj", "{CB6D91F6-A569-4965-9DDF-4F40AD56887D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoApi.Test", "TodoApi.Test\TodoApi.Test.csproj", "{70B86F84-4D81-48A3-8942-ACC6756D6826}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoApi.Tests", "TodoApi.Tests\TodoApi.Tests.csproj", "{70B86F84-4D81-48A3-8942-ACC6756D6826}"
 EndProject
 Global
   GlobalSection(SolutionConfigurationPlatforms) = preSolution

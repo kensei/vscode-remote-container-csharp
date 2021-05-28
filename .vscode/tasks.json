@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/server/server.csproj"
+                "${workspaceFolder}/server/TodoApi/TodoApi.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -17,7 +17,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/server/server.csproj"
+                "${workspaceFolder}/server/TodoApi/TodoApi.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -28,7 +28,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/server/server.csproj"
+                "${workspaceFolder}/server/TodoApi/TodoApi.csproj"
             ],
             "problemMatcher": "$tsc"
         }

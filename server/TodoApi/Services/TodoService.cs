@@ -32,26 +32,75 @@ namespace TodoApi.Services
             return todoItem;
         }
 
-        public async Task<TodoItem> UpdateTodoItem(long id, TodoItem todoItem)
+        public async Task<TodoItem> AddTodoItem(TodoItem todoItem)
         {
-            _context.Entry(todoItem).State = EntityState.Modified;
-
-            try
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                await _context.SaveChangesAsync();
-                return await GetTodoItem(id);
-            }
-            catch (DbUpdateConcurrencyException e)
-            {
-                if (!TodoItemExists(id))
+                try
                 {
-                    throw new ResourceNotFoundException(string.Format("todo not found {0}", id));
+                    _context.TodoItems.Add(todoItem);
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                    return todoItem;
                 }
-                else
+                catch (DbUpdateConcurrencyException e)
                 {
+                    transaction.Rollback();
                     throw e;
                 }
             }
+        }
+
+        public async Task<TodoItem> UpdateTodoItem(long id, TodoItem todoItem)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                _context.Entry(todoItem).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                    return todoItem;
+                }
+                catch (DbUpdateConcurrencyException e)
+                {
+                    transaction.Rollback();
+                    if (!TodoItemExists(id))
+                    {
+                        throw new ResourceNotFoundException(string.Format("todo not found {0}", id));
+                    }
+                    else
+                    {
+                        throw e;
+                    }
+                }
+            }
+        }
+
+        public async Task<TodoItem> DeleteTodoItem(long id)
+        {
+            var todoItem = await _context.TodoItems.FindAsync(id);
+ 
+            // 指定したTodoレコードが存在しなかった場合、空のtodoItemを返して、コントローラーにその後の処理を託す。
+            if (todoItem == null)
+            {
+                throw new ResourceNotFoundException($"todo is not found {id}");
+            }
+            using (var transaction = _context.Database.BeginTransaction()){
+                try
+                {
+                  _context.TodoItems.Remove(todoItem);
+                  await _context.SaveChangesAsync();
+                  transaction.Commit();
+                }
+                catch (DbUpdateConcurrencyException e)
+                {
+                  transaction.Rollback();
+                  throw e;
+                }
+            }
+            return todoItem;
         }
 
         private bool TodoItemExists(long id)

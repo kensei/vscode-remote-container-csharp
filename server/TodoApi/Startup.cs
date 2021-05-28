@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
 using TodoApi.Data;
+using TodoApi.Services;
 
 namespace TodoApi
 {
@@ -42,11 +43,8 @@ namespace TodoApi
                 options.IsLoggingJson = Configuration.GetValue<bool>("IsLoggingJson");
             });
             services.AddApiVersioning();
-            services.AddControllers(options =>
-            {
-                options.InputFormatters.Add(null);
-                options.OutputFormatters.Add(null);
-            });
+            services.AddControllers();
+            services.AddScoped<TodoService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "server", Version = "v1" });
