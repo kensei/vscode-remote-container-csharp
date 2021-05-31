@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y build-essential g++ mariadb-client
 
 # RUN dotnet tool install --global dotnet-ef
 # RUN dotnet tool install --global dotnet-aspnet-codegenerator
+# RUN dotnet tool install --global dotnet-reportgenerator-globaltool
 
 ENV PATH $PATH:/home/vscode/.dotnet/tools
 
@@ -16,3 +17,8 @@ ENV PATH $PATH:/home/vscode/.dotnet/tools
 # RUN dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 # RUN dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design
 # RUN dotnet add package Pomelo.EntityFrameworkCore.MySql
+# RUN dotnet add package Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer
+# RUN dotnet add package Google.Protobuf
+
+# RUN dotnet add package Microsoft.AspNetCore.Mvc.Testing
+# RUN dotnet add package coverlet.msbuild

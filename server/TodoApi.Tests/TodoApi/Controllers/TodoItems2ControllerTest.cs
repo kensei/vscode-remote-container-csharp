@@ -42,10 +42,8 @@ namespace TodoApi.Tests.TodoApi.Controllers
             
             var message = ConvertHttpResponseToByte(result);
             var response = Deserialize<Pb.Messages.Todo.TodosGetResponse>(message);
-            TestContext.WriteLine("ErrorCode:" + response.Common.ErrorCode);
             Assert.IsTrue(response.Common.ErrorCode == 0);
 
-            TestContext.WriteLine("count:" + response.TodoItems.Count);
             Assert.IsTrue(response.TodoItems.Count == 3);
             Assert.IsTrue(response.TodoItems[0].Title == "hoge");
             Assert.IsTrue(response.TodoItems[1].Title == "fuga");
