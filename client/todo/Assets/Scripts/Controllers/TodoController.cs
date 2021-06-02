@@ -16,7 +16,7 @@ public class TodoController : MonoBehaviour
         for (int i = 0; i < 20; i++)
         {
             var listElement = Instantiate(m_scrollElement, Vector3.zero, Quaternion.identity);
-            listElement.transform.parent = m_scrollContent.transform;
+            listElement.SetParent(m_scrollContent.transform);
         }
     }
 
@@ -24,5 +24,10 @@ public class TodoController : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void OnClickAddButton()
+    {
+        Debug.Log("OnClickAddButton");
     }
 }
