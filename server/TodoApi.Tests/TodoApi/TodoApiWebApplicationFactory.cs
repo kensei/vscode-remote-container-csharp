@@ -56,12 +56,6 @@ namespace TodoApi.Tests.TodoApi
             db.SaveChanges();
         }
 
-        public static void ReinitializeDbForTests(TodoContext db)
-        {
-            db.TodoItems.RemoveRange(db.TodoItems);
-            InitializeDbForTests(db);
-        }
-
         public static List<TodoItem> GetSeedingMessages()
         {
             return new List<TodoItem>()
