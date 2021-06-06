@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Todo.Screen.ViewModels
+namespace Todo.Views.Todo.ViewModels
 {
     public class TodoItemViewModel
     {

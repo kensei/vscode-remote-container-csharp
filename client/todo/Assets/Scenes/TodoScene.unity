@@ -1077,6 +1077,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fed60cf4936b47c8859b70240380850, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_todoDialog: {fileID: 4491342654707534173, guid: 5bb46b44b10b442a1a27326cdd41c47b, type: 3}
+  m_uiRoot: {fileID: 65388876}
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
