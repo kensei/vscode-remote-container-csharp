@@ -14,7 +14,15 @@ namespace Todo.Views.Todo.Views
         [SerializeField]
         private RectTransform m_scrollElement;
 
+        private List<TodoItemView> m_itemViewList;
         private Action m_addElementHandler;
+        private Action<TodoItemViewModel> m_updateElementHandler;
+        private Action<TodoItemViewModel> m_deleteElementHandler;
+
+        private void Awake()
+        {
+            m_itemViewList = new List<TodoItemView>();
+        }
 
         public void Show(List<TodoItemViewModel> todoItems, Action addElementHandler, Action<TodoItemViewModel> updateElementHandler, Action<TodoItemViewModel> deleteElementHandler)
         {
@@ -24,6 +32,7 @@ namespace Todo.Views.Todo.Views
             {
                 var listElement = Instantiate(m_scrollElement, m_scrollContent.transform);
                 var elementView = listElement.GetComponent<TodoItemView>();
+                m_itemViewList.Add(elementView);
                 elementView.ShowElement(todoItem, updateElementHandler, deleteElementHandler);
             }
         }
@@ -37,11 +46,39 @@ namespace Todo.Views.Todo.Views
             }
         }
 
-        public void AddElement(TodoItemViewModel todoItem, Action<TodoItemViewModel> updateElementHandler, Action<TodoItemViewModel> deleteElementHandler)
+        public void AddElement(TodoItemViewModel addTodoItem)
         {
             var listElement = Instantiate(m_scrollElement, m_scrollContent.transform);
             var elementView = listElement.GetComponent<TodoItemView>();
-            elementView.ShowElement(todoItem, updateElementHandler, deleteElementHandler);
+            m_itemViewList.Add(elementView);
+            elementView.ShowElement(addTodoItem, m_updateElementHandler, m_deleteElementHandler);
+        }
+
+        public void UpdateElement(TodoItemViewModel updateTodoItem)
+        {
+            var updateTarget = m_itemViewList.Find(x => x.IsEqualId(updateTodoItem.Id));
+            if (updateTarget != null)
+            {
+                updateTarget.UpdateElement(updateTodoItem);
+            }
+            else
+            {
+                Debug.LogError("update item not found : " + updateTodoItem.Id);
+            }
+        }
+
+        public void DeleteElement(TodoItemViewModel deleteTodoItem)
+        {
+            Debug.Log("DeleteElement:" + deleteTodoItem.Id);
+            var deleteTarget = m_itemViewList.Find(x => x.IsEqualId(deleteTodoItem.Id));
+            if (deleteTarget != null)
+            {
+                deleteTarget.DeleteElement();
+            }
+            else
+            {
+                Debug.LogError("update item not found : " + deleteTodoItem.Id);
+            }
         }
     }
 }

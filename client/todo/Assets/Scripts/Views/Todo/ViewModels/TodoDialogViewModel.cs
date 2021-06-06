@@ -10,7 +10,7 @@ namespace Todo.Views.Todo.ViewModels
         {
             Show,
             Add,
-            Delete,
+            Edit,
         }
 
         public DialogViewMode TodoDialogViewMode { get; set; }

@@ -20,7 +20,7 @@ namespace Todo.Views.Todo.Views
 
         public void Show(TodoDialogViewModel todoDialogViewModel, Action<TodoDialogViewModel> dialogOkHandler, Action dialogCancelHandler)
         {
-            Debug.Log("TodoDialogView.Show");
+            Debug.Log("TodoDialogView.Show:" + todoDialogViewModel.Id);
             m_dialogOkHandler = dialogOkHandler;
             m_dialogCancelHandler = dialogCancelHandler;
             m_oridinalTodoItem = todoDialogViewModel;

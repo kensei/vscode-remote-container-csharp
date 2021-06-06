@@ -20,11 +20,31 @@ namespace Todo.Views.Todo.Views
 
         public void ShowElement(TodoItemViewModel todoItem, Action<TodoItemViewModel> updateElementHandler, Action<TodoItemViewModel> deleteElementHandler)
         {
+            m_viewModel = todoItem;
             m_updateElementHandler = updateElementHandler;
             m_deleteElementHandler = deleteElementHandler;
 
             m_title.text = todoItem.Title;
             m_isComplete.isOn = todoItem.IsComplete;
+        }
+
+        public void UpdateElement(TodoItemViewModel todoItem)
+        {
+            m_viewModel = todoItem;
+            m_title.text = todoItem.Title;
+            m_isComplete.isOn = todoItem.IsComplete;
+        }
+
+        public void DeleteElement()
+        {
+            m_updateElementHandler = null;
+            m_deleteElementHandler = null;
+            Destroy(this.gameObject);
+        }
+
+        public bool IsEqualId(long id)
+        {
+            return (m_viewModel.Id == id);
         }
 
         public void OnClickDelButton()

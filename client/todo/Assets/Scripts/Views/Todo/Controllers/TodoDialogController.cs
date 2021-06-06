@@ -11,13 +11,9 @@ namespace Todo.Views.Todo.Controllers
     {
         private TodoDialogView m_view;
 
-        void Awake()
-        {
-            m_view = this.GetComponent<TodoDialogView>();
-        }
-
         public void Show(TodoDialogViewModel todoDialogViewModel, Action<TodoDialogViewModel> dialogOkHandler, Action dialogCancelHandler)
         {
+            m_view = this.GetComponent<TodoDialogView>();
             m_view.Show(todoDialogViewModel, dialogOkHandler, dialogCancelHandler);
         }
     }
