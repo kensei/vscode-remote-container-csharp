@@ -28,7 +28,7 @@ namespace Todo.Views.Todo.Controllers
 
         void Start()
         {
-            m_presenter.Start();
+            StartCoroutine(m_presenter.Start());
         }
 
         private TodoDialogController InitTodoDialog()

@@ -15,10 +15,10 @@ namespace Todo.Views.Todo.Views
         private Toggle m_isComplete;
 
         private TodoItemViewModel m_viewModel;
-        private Action<TodoItemViewModel> m_updateElementHandler;
-        private Action<TodoItemViewModel> m_deleteElementHandler;
+        private Func<TodoItemViewModel, IEnumerator> m_updateElementHandler;
+        private Func<TodoItemViewModel, IEnumerator> m_deleteElementHandler;
 
-        public void ShowElement(TodoItemViewModel todoItem, Action<TodoItemViewModel> updateElementHandler, Action<TodoItemViewModel> deleteElementHandler)
+        public IEnumerator ShowElement(TodoItemViewModel todoItem, Func<TodoItemViewModel, IEnumerator> updateElementHandler, Func<TodoItemViewModel, IEnumerator> deleteElementHandler)
         {
             m_viewModel = todoItem;
             m_updateElementHandler = updateElementHandler;
@@ -26,20 +26,26 @@ namespace Todo.Views.Todo.Views
 
             m_title.text = todoItem.Title;
             m_isComplete.isOn = todoItem.IsComplete;
+
+            yield return null;
         }
 
-        public void UpdateElement(TodoItemViewModel todoItem)
+        public IEnumerator UpdateElement(TodoItemViewModel todoItem)
         {
             m_viewModel = todoItem;
             m_title.text = todoItem.Title;
             m_isComplete.isOn = todoItem.IsComplete;
+
+            yield return null;
         }
 
-        public void DeleteElement()
+        public IEnumerator DeleteElement()
         {
             m_updateElementHandler = null;
             m_deleteElementHandler = null;
             Destroy(this.gameObject);
+
+            yield return null;
         }
 
         public bool IsEqualId(long id)
@@ -52,7 +58,7 @@ namespace Todo.Views.Todo.Views
             Debug.Log("OnClickDelButton");
             if (m_deleteElementHandler != null)
             {
-                m_deleteElementHandler(m_viewModel);
+                StartCoroutine(m_deleteElementHandler(m_viewModel));
             }
         }
 
@@ -61,7 +67,7 @@ namespace Todo.Views.Todo.Views
             Debug.Log("OnClickEditButton");
             if (m_updateElementHandler != null)
             {
-                m_updateElementHandler(m_viewModel);
+                StartCoroutine(m_updateElementHandler(m_viewModel));
             }
         }
     }

@@ -23,10 +23,12 @@ namespace Todo.Views.Todo
             m_repository = repository;
         }
 
-        public void Start()
+        public IEnumerator Start()
         {
-            var todoList = m_repository.GetTodoItems().Select(x => ConvertModelToViewModel(x)).ToList();
-            m_view.Show(todoList, AddTodoItem, UpdateTodoItem, DeleteTodoItem);
+            var todoItemsIterator = m_repository.GetTodoItems();
+            yield return todoItemsIterator;
+            var todoList = todoItemsIterator.Current.Select(x => ConvertModelToViewModel(x)).ToList();
+            yield return m_view.Show(todoList, AddTodoItem(), UpdateTodoItem, DeleteTodoItem);
         }
 
         private TodoItemViewModel ConvertModelToViewModel(TodoItem model)
@@ -49,42 +51,46 @@ namespace Todo.Views.Todo
             return new TodoDialogViewModel { TodoDialogViewMode = dialogViewMode, Id = viewModel.Id, Title = viewModel.Title, IsComplete = viewModel.IsComplete };
         }
 
-        private void AddTodoItem()
+        private IEnumerator AddTodoItem()
         {
             UnityEngine.Debug.Log("AddTodoItem");
             var newItem = new TodoDialogViewModel { TodoDialogViewMode = TodoDialogViewModel.DialogViewMode.Add };
-            m_todoDialog.Show(newItem, DialogAddResultHandler, DialogCancelHandler);
+            yield return m_todoDialog.Show(newItem, DialogAddResultHandler, DialogCancelHandler);
         }
 
-        private void UpdateTodoItem(TodoItemViewModel updateTodoItemViewModel)
+        private IEnumerator UpdateTodoItem(TodoItemViewModel updateTodoItemViewModel)
         {
             UnityEngine.Debug.Log("UpdateTodoItem:" + updateTodoItemViewModel.Id);
             var updateItem = ConvertViewModelToDialogViewModel(updateTodoItemViewModel, TodoDialogViewModel.DialogViewMode.Edit); ;
-            m_todoDialog.Show(updateItem, DialogUpdateResultHandler, DialogCancelHandler);
+            yield return m_todoDialog.Show(updateItem, DialogUpdateResultHandler, DialogCancelHandler);
         }
 
-        private void DeleteTodoItem(TodoItemViewModel deleteTodoItemViewModel)
+        private IEnumerator DeleteTodoItem(TodoItemViewModel deleteTodoItemViewModel)
         {
             UnityEngine.Debug.Log("DeleteTodoItem:" + deleteTodoItemViewModel.Id);
             var deleteTodoItem = ConvertViewModelToModel(deleteTodoItemViewModel);
             m_repository.DeleteTodoItem(deleteTodoItem.Id);
-            m_view.DeleteElement(deleteTodoItemViewModel);
+            yield return m_view.DeleteElement(deleteTodoItemViewModel);
         }
 
-        private void DialogAddResultHandler(TodoDialogViewModel viewModel)
+        private IEnumerator DialogAddResultHandler(TodoDialogViewModel viewModel)
         {
             var addTodoItem = ConvertDialogViewModelToModel(viewModel);
-            var addTodoModel = m_repository.AddTodoItem(addTodoItem);
+            var addTodoItemIterator = m_repository.AddTodoItem(addTodoItem);
+            yield return addTodoItemIterator;
+            var addTodoModel = addTodoItemIterator.Current;
             var addTodoViewModel = ConvertModelToViewModel(addTodoModel);
-            m_view.AddElement(addTodoViewModel);
+            yield return m_view.AddElement(addTodoViewModel);
         }
 
-        private void DialogUpdateResultHandler(TodoDialogViewModel viewModel)
+        private IEnumerator DialogUpdateResultHandler(TodoDialogViewModel viewModel)
         {
             var updateTodoItem = ConvertDialogViewModelToModel(viewModel);
-            var updateTodoModel = m_repository.UpdateTodoItem(updateTodoItem);
+            var updateTodoItemItarator = m_repository.UpdateTodoItem(updateTodoItem);
+            yield return updateTodoItemItarator;
+            var updateTodoModel = updateTodoItemItarator.Current;
             var updateTodoViewModel = ConvertModelToViewModel(updateTodoModel);
-            m_view.UpdateElement(updateTodoViewModel);
+            yield return m_view.UpdateElement(updateTodoViewModel);
         }
 
         private void DialogCancelHandler()

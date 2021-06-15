@@ -15,16 +15,16 @@ namespace Todo.Views.Todo.Views
         private RectTransform m_scrollElement;
 
         private List<TodoItemView> m_itemViewList;
-        private Action m_addElementHandler;
-        private Action<TodoItemViewModel> m_updateElementHandler;
-        private Action<TodoItemViewModel> m_deleteElementHandler;
+        private IEnumerator m_addElementHandler;
+        private Func<TodoItemViewModel, IEnumerator> m_updateElementHandler;
+        private Func<TodoItemViewModel, IEnumerator> m_deleteElementHandler;
 
         private void Awake()
         {
             m_itemViewList = new List<TodoItemView>();
         }
 
-        public void Show(List<TodoItemViewModel> todoItems, Action addElementHandler, Action<TodoItemViewModel> updateElementHandler, Action<TodoItemViewModel> deleteElementHandler)
+        public IEnumerator Show(List<TodoItemViewModel> todoItems, IEnumerator addElementHandler, Func<TodoItemViewModel, IEnumerator> updateElementHandler, Func<TodoItemViewModel, IEnumerator> deleteElementHandler)
         {
             m_addElementHandler = addElementHandler;
 
@@ -33,7 +33,7 @@ namespace Todo.Views.Todo.Views
                 var listElement = Instantiate(m_scrollElement, m_scrollContent.transform);
                 var elementView = listElement.GetComponent<TodoItemView>();
                 m_itemViewList.Add(elementView);
-                elementView.ShowElement(todoItem, updateElementHandler, deleteElementHandler);
+                yield return elementView.ShowElement(todoItem, updateElementHandler, deleteElementHandler);
             }
         }
 
@@ -42,38 +42,39 @@ namespace Todo.Views.Todo.Views
             Debug.Log("OnClickAddButton");
             if (m_addElementHandler != null)
             {
-                m_addElementHandler();
+                StartCoroutine(m_addElementHandler);
             }
         }
 
-        public void AddElement(TodoItemViewModel addTodoItem)
+        public IEnumerator AddElement(TodoItemViewModel addTodoItem)
         {
             var listElement = Instantiate(m_scrollElement, m_scrollContent.transform);
             var elementView = listElement.GetComponent<TodoItemView>();
             m_itemViewList.Add(elementView);
-            elementView.ShowElement(addTodoItem, m_updateElementHandler, m_deleteElementHandler);
+            yield return elementView.ShowElement(addTodoItem, m_updateElementHandler, m_deleteElementHandler);
         }
 
-        public void UpdateElement(TodoItemViewModel updateTodoItem)
+        public IEnumerator UpdateElement(TodoItemViewModel updateTodoItem)
         {
             var updateTarget = m_itemViewList.Find(x => x.IsEqualId(updateTodoItem.Id));
             if (updateTarget != null)
             {
-                updateTarget.UpdateElement(updateTodoItem);
+                yield return updateTarget.UpdateElement(updateTodoItem);
             }
             else
             {
                 Debug.LogError("update item not found : " + updateTodoItem.Id);
+                yield break;
             }
         }
 
-        public void DeleteElement(TodoItemViewModel deleteTodoItem)
+        public IEnumerator DeleteElement(TodoItemViewModel deleteTodoItem)
         {
             Debug.Log("DeleteElement:" + deleteTodoItem.Id);
             var deleteTarget = m_itemViewList.Find(x => x.IsEqualId(deleteTodoItem.Id));
             if (deleteTarget != null)
             {
-                deleteTarget.DeleteElement();
+                yield return deleteTarget.DeleteElement();
             }
             else
             {

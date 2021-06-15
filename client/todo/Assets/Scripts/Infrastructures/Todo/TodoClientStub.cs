@@ -20,29 +20,29 @@ namespace Todo.Infrastructures.Todo
             };
         }
 
-        public List<TodoItem> GetTodoItems()
+        public IEnumerator<List<TodoItem>> GetTodoItems()
         {
-            return m_todoItems;
+            yield return m_todoItems;
         }
 
-        public TodoItem GetTodoItemById(long id)
+        public IEnumerator<TodoItem> GetTodoItemById(long id)
         {
             var todo = m_todoItems.Find(x => x.Id == id);
             if (todo == null)
             {
                 throw new NotFoundException("not found id:" + id);
             }
-            return todo;
+            yield return todo;
         }
 
-        public TodoItem AddTodoItem(TodoItem todoItem)
+        public IEnumerator<TodoItem> AddTodoItem(TodoItem todoItem)
         {
             todoItem.Id = m_todoItems.OrderBy(x => x.Id).LastOrDefault().Id + 1;
             m_todoItems.Add(todoItem);
-            return todoItem;
+            yield return todoItem;
         }
 
-        public TodoItem UpdateTodoItem(TodoItem todoItem)
+        public IEnumerator<TodoItem> UpdateTodoItem(TodoItem todoItem)
         {
             var updateIndex = m_todoItems.FindIndex(x => x.Id == todoItem.Id);
             if (updateIndex < 0)
@@ -50,14 +50,18 @@ namespace Todo.Infrastructures.Todo
                 throw new NotFoundException("not found id:" + todoItem.Id);
             }
             m_todoItems[updateIndex] = todoItem;
-            return todoItem;
+            yield return todoItem;
         }
 
-        public TodoItem DeleteTodoItem(long id)
+        public IEnumerator<TodoItem> DeleteTodoItem(long id)
         {
-            var removeItem = GetTodoItemById(id);
-            m_todoItems.Remove(removeItem);
-            return removeItem;
+            var removeItemEnumrator = GetTodoItemById(id);
+            while(removeItemEnumrator.MoveNext())
+            {
+                var removeItem = removeItemEnumrator.Current;
+                m_todoItems.Remove(removeItem);
+                yield return removeItem;
+            }
         }
     }
 }

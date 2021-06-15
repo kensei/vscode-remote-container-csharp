@@ -6,27 +6,27 @@ namespace Todo.Infrastructures.Todo
 {
     public class TodoClient : ITodoClient
     {
-        public List<TodoItem> GetTodoItems()
+        public IEnumerator<List<TodoItem>> GetTodoItems()
         {
             throw new System.NotImplementedException();
         }
 
-        public TodoItem GetTodoItemById(long id)
+        public IEnumerator<TodoItem> GetTodoItemById(long id)
         {
             throw new System.NotImplementedException();
         }
 
-        public TodoItem AddTodoItem(TodoItem todoItem)
+        public IEnumerator<TodoItem> AddTodoItem(TodoItem todoItem)
         {
             throw new System.NotImplementedException();
         }
 
-        public TodoItem UpdateTodoItem(TodoItem todoItem)
+        public IEnumerator<TodoItem> UpdateTodoItem(TodoItem todoItem)
         {
             throw new System.NotImplementedException();
         }
 
-        public TodoItem DeleteTodoItem(long id)
+        public IEnumerator<TodoItem> DeleteTodoItem(long id)
         {
             throw new System.NotImplementedException();
         }

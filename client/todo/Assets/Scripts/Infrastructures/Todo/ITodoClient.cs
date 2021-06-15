@@ -6,14 +6,14 @@ namespace Todo.Infrastructures.Todo
 {
     public interface ITodoClient
     {
-        public List<TodoItem> GetTodoItems();
+        public IEnumerator<List<TodoItem>> GetTodoItems();
 
-        public TodoItem GetTodoItemById(long id);
+        public IEnumerator<TodoItem> GetTodoItemById(long id);
 
-        public TodoItem AddTodoItem(TodoItem todoItem);
+        public IEnumerator<TodoItem> AddTodoItem(TodoItem todoItem);
 
-        public TodoItem UpdateTodoItem(TodoItem todoItem);
+        public IEnumerator<TodoItem> UpdateTodoItem(TodoItem todoItem);
 
-        public TodoItem DeleteTodoItem(long id);
+        public IEnumerator<TodoItem> DeleteTodoItem(long id);
     }
 }

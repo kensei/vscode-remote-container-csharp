@@ -11,10 +11,10 @@ namespace Todo.Views.Todo.Controllers
     {
         private TodoDialogView m_view;
 
-        public void Show(TodoDialogViewModel todoDialogViewModel, Action<TodoDialogViewModel> dialogOkHandler, Action dialogCancelHandler)
+        public IEnumerator Show(TodoDialogViewModel todoDialogViewModel, Func<TodoDialogViewModel, IEnumerator> dialogOkHandler, Action dialogCancelHandler)
         {
             m_view = this.GetComponent<TodoDialogView>();
-            m_view.Show(todoDialogViewModel, dialogOkHandler, dialogCancelHandler);
+            yield return m_view.Show(todoDialogViewModel, dialogOkHandler, dialogCancelHandler);
         }
     }
 }

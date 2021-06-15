@@ -15,10 +15,10 @@ namespace Todo.Views.Todo.Views
         private Toggle m_isComplete;
 
         private TodoDialogViewModel m_oridinalTodoItem;
-        private Action<TodoDialogViewModel> m_dialogOkHandler;
+        private Func<TodoDialogViewModel, IEnumerator> m_dialogOkHandler;
         private Action m_dialogCancelHandler;
 
-        public void Show(TodoDialogViewModel todoDialogViewModel, Action<TodoDialogViewModel> dialogOkHandler, Action dialogCancelHandler)
+        public IEnumerator Show(TodoDialogViewModel todoDialogViewModel, Func<TodoDialogViewModel, IEnumerator> dialogOkHandler, Action dialogCancelHandler)
         {
             Debug.Log("TodoDialogView.Show:" + todoDialogViewModel.Id);
             m_dialogOkHandler = dialogOkHandler;
@@ -29,13 +29,20 @@ namespace Todo.Views.Todo.Views
             m_isComplete.isOn = todoDialogViewModel.IsComplete;
 
             this.gameObject.SetActive(true);
+
+            yield return null;
+        }
+
+        public IEnumerator Test(int i)
+        {
+            yield return null;
         }
 
         public void OnClickOkButton()
         {
             Debug.Log("OnClickOkButton");
             var result = new TodoDialogViewModel { Id = m_oridinalTodoItem.Id, Title = m_title.text, IsComplete = m_isComplete.isOn };
-            m_dialogOkHandler(result);
+            StartCoroutine(m_dialogOkHandler(result));
             this.gameObject.SetActive(false);
         }
 
