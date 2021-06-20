@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Todo.Entity;
@@ -6,14 +7,14 @@ namespace Todo.Infrastructures.Todo
 {
     public interface ITodoClient
     {
-        public IEnumerator<List<TodoItem>> GetTodoItems();
+        public IEnumerator GetTodoItems(Action<List<TodoItem>> callback);
 
-        public IEnumerator<TodoItem> GetTodoItemById(long id);
+        public IEnumerator GetTodoItemById(long id, Action<TodoItem> callback);
 
-        public IEnumerator<TodoItem> AddTodoItem(TodoItem todoItem);
+        public IEnumerator AddTodoItem(TodoItem todoItem, Action<TodoItem> callback);
 
-        public IEnumerator<TodoItem> UpdateTodoItem(TodoItem todoItem);
+        public IEnumerator UpdateTodoItem(TodoItem todoItem, Action<TodoItem> callback);
 
-        public IEnumerator<TodoItem> DeleteTodoItem(long id);
+        public IEnumerator DeleteTodoItem(long id, Action<TodoItem> callback);
     }
 }

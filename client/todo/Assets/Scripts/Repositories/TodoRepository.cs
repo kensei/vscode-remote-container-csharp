@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Todo.Infrastructures.Todo;
@@ -11,32 +12,33 @@ namespace Todo.Repositories
 
         public TodoRepository()
         {
-            m_client = new TodoClientStub();
+            //m_client = new TodoClientStub();
+            m_client = new TodoClient();
         }
 
-        public IEnumerator<List<TodoItem>> GetTodoItems()
+        public IEnumerator GetTodoItems(Action<List<TodoItem>> callback)
         {
-            return m_client.GetTodoItems();
+            yield return m_client.GetTodoItems(callback);
         }
 
-        public IEnumerator<TodoItem> GetTodoItemById(int id)
+        public IEnumerator GetTodoItemById(int id, Action<TodoItem> callback)
         {
-            return m_client.GetTodoItemById(id);
+            yield return m_client.GetTodoItemById(id, callback);
         }
 
-        public IEnumerator<TodoItem> AddTodoItem(TodoItem todoItem)
+        public IEnumerator AddTodoItem(TodoItem todoItem, Action<TodoItem> callback)
         {
-            return m_client.AddTodoItem(todoItem);
+            yield return m_client.AddTodoItem(todoItem, callback);
         }
 
-        public IEnumerator<TodoItem> UpdateTodoItem(TodoItem todoItem)
+        public IEnumerator UpdateTodoItem(TodoItem todoItem, Action<TodoItem> callback)
         {
-            return m_client.UpdateTodoItem(todoItem);
+            yield return m_client.UpdateTodoItem(todoItem, callback);
         }
 
-        public IEnumerator<TodoItem> DeleteTodoItem(long id)
+        public IEnumerator DeleteTodoItem(long id, Action<TodoItem> callback)
         {
-            return m_client.DeleteTodoItem(id);
+            yield return m_client.DeleteTodoItem(id, callback);
         }
     }
 }

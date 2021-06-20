@@ -24,7 +24,7 @@ namespace Todo.Views.Todo.Views
             m_itemViewList = new List<TodoItemView>();
         }
 
-        public IEnumerator Show(List<TodoItemViewModel> todoItems, IEnumerator addElementHandler, Func<TodoItemViewModel, IEnumerator> updateElementHandler, Func<TodoItemViewModel, IEnumerator> deleteElementHandler)
+        public void Show(List<TodoItemViewModel> todoItems, IEnumerator addElementHandler, Func<TodoItemViewModel, IEnumerator> updateElementHandler, Func<TodoItemViewModel, IEnumerator> deleteElementHandler)
         {
             m_addElementHandler = addElementHandler;
 
@@ -33,7 +33,7 @@ namespace Todo.Views.Todo.Views
                 var listElement = Instantiate(m_scrollElement, m_scrollContent.transform);
                 var elementView = listElement.GetComponent<TodoItemView>();
                 m_itemViewList.Add(elementView);
-                yield return elementView.ShowElement(todoItem, updateElementHandler, deleteElementHandler);
+                elementView.ShowElement(todoItem, updateElementHandler, deleteElementHandler);
             }
         }
 
@@ -46,35 +46,34 @@ namespace Todo.Views.Todo.Views
             }
         }
 
-        public IEnumerator AddElement(TodoItemViewModel addTodoItem)
+        public void AddElement(TodoItemViewModel addTodoItem)
         {
             var listElement = Instantiate(m_scrollElement, m_scrollContent.transform);
             var elementView = listElement.GetComponent<TodoItemView>();
             m_itemViewList.Add(elementView);
-            yield return elementView.ShowElement(addTodoItem, m_updateElementHandler, m_deleteElementHandler);
+            elementView.ShowElement(addTodoItem, m_updateElementHandler, m_deleteElementHandler);
         }
 
-        public IEnumerator UpdateElement(TodoItemViewModel updateTodoItem)
+        public void UpdateElement(TodoItemViewModel updateTodoItem)
         {
             var updateTarget = m_itemViewList.Find(x => x.IsEqualId(updateTodoItem.Id));
             if (updateTarget != null)
             {
-                yield return updateTarget.UpdateElement(updateTodoItem);
+                updateTarget.UpdateElement(updateTodoItem);
             }
             else
             {
                 Debug.LogError("update item not found : " + updateTodoItem.Id);
-                yield break;
             }
         }
 
-        public IEnumerator DeleteElement(TodoItemViewModel deleteTodoItem)
+        public void DeleteElement(TodoItemViewModel deleteTodoItem)
         {
             Debug.Log("DeleteElement:" + deleteTodoItem.Id);
             var deleteTarget = m_itemViewList.Find(x => x.IsEqualId(deleteTodoItem.Id));
             if (deleteTarget != null)
             {
-                yield return deleteTarget.DeleteElement();
+                deleteTarget.DeleteElement();
             }
             else
             {

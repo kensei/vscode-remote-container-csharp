@@ -18,7 +18,7 @@ namespace Todo.Views.Todo.Views
         private Func<TodoItemViewModel, IEnumerator> m_updateElementHandler;
         private Func<TodoItemViewModel, IEnumerator> m_deleteElementHandler;
 
-        public IEnumerator ShowElement(TodoItemViewModel todoItem, Func<TodoItemViewModel, IEnumerator> updateElementHandler, Func<TodoItemViewModel, IEnumerator> deleteElementHandler)
+        public void ShowElement(TodoItemViewModel todoItem, Func<TodoItemViewModel, IEnumerator> updateElementHandler, Func<TodoItemViewModel, IEnumerator> deleteElementHandler)
         {
             m_viewModel = todoItem;
             m_updateElementHandler = updateElementHandler;
@@ -26,26 +26,20 @@ namespace Todo.Views.Todo.Views
 
             m_title.text = todoItem.Title;
             m_isComplete.isOn = todoItem.IsComplete;
-
-            yield return null;
         }
 
-        public IEnumerator UpdateElement(TodoItemViewModel todoItem)
+        public void UpdateElement(TodoItemViewModel todoItem)
         {
             m_viewModel = todoItem;
             m_title.text = todoItem.Title;
             m_isComplete.isOn = todoItem.IsComplete;
-
-            yield return null;
         }
 
-        public IEnumerator DeleteElement()
+        public void DeleteElement()
         {
             m_updateElementHandler = null;
             m_deleteElementHandler = null;
             Destroy(this.gameObject);
-
-            yield return null;
         }
 
         public bool IsEqualId(long id)

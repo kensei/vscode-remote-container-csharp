@@ -20,29 +20,32 @@ namespace Todo.Infrastructures.Todo
             };
         }
 
-        public IEnumerator<List<TodoItem>> GetTodoItems()
+        public IEnumerator GetTodoItems(Action<List<TodoItem>> callback)
         {
-            yield return m_todoItems;
+            callback(m_todoItems);
+            yield return null;
         }
 
-        public IEnumerator<TodoItem> GetTodoItemById(long id)
+        public IEnumerator GetTodoItemById(long id, Action<TodoItem> callback)
         {
             var todo = m_todoItems.Find(x => x.Id == id);
             if (todo == null)
             {
                 throw new NotFoundException("not found id:" + id);
             }
-            yield return todo;
+            callback(todo);
+            yield return null;
         }
 
-        public IEnumerator<TodoItem> AddTodoItem(TodoItem todoItem)
+        public IEnumerator AddTodoItem(TodoItem todoItem, Action<TodoItem> callback)
         {
             todoItem.Id = m_todoItems.OrderBy(x => x.Id).LastOrDefault().Id + 1;
             m_todoItems.Add(todoItem);
-            yield return todoItem;
+            callback(todoItem);
+            yield return null;
         }
 
-        public IEnumerator<TodoItem> UpdateTodoItem(TodoItem todoItem)
+        public IEnumerator UpdateTodoItem(TodoItem todoItem, Action<TodoItem> callback)
         {
             var updateIndex = m_todoItems.FindIndex(x => x.Id == todoItem.Id);
             if (updateIndex < 0)
@@ -50,18 +53,17 @@ namespace Todo.Infrastructures.Todo
                 throw new NotFoundException("not found id:" + todoItem.Id);
             }
             m_todoItems[updateIndex] = todoItem;
-            yield return todoItem;
+            callback(todoItem);
+            yield return null;
         }
 
-        public IEnumerator<TodoItem> DeleteTodoItem(long id)
+        public IEnumerator DeleteTodoItem(long id, Action<TodoItem> callback)
         {
-            var removeItemEnumrator = GetTodoItemById(id);
-            while(removeItemEnumrator.MoveNext())
-            {
-                var removeItem = removeItemEnumrator.Current;
+            var removeItemEnumrator = GetTodoItemById(id, (removeItem) => {
+                callback(removeItem);
                 m_todoItems.Remove(removeItem);
-                yield return removeItem;
-            }
+            });
+            yield return null;
         }
     }
 }

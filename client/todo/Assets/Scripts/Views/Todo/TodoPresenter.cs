@@ -25,10 +25,10 @@ namespace Todo.Views.Todo
 
         public IEnumerator Start()
         {
-            var todoItemsIterator = m_repository.GetTodoItems();
-            yield return todoItemsIterator;
-            var todoList = todoItemsIterator.Current.Select(x => ConvertModelToViewModel(x)).ToList();
-            yield return m_view.Show(todoList, AddTodoItem(), UpdateTodoItem, DeleteTodoItem);
+            yield return m_repository.GetTodoItems((todoList) => {
+                var todoViewList = todoList.Select(x => ConvertModelToViewModel(x)).ToList();
+                m_view.Show(todoViewList, AddTodoItem(), UpdateTodoItem, DeleteTodoItem);
+            });
         }
 
         private TodoItemViewModel ConvertModelToViewModel(TodoItem model)
@@ -69,28 +69,30 @@ namespace Todo.Views.Todo
         {
             UnityEngine.Debug.Log("DeleteTodoItem:" + deleteTodoItemViewModel.Id);
             var deleteTodoItem = ConvertViewModelToModel(deleteTodoItemViewModel);
-            m_repository.DeleteTodoItem(deleteTodoItem.Id);
-            yield return m_view.DeleteElement(deleteTodoItemViewModel);
+            yield return m_repository.DeleteTodoItem(deleteTodoItem.Id, (todoItem) =>
+            {
+                m_view.DeleteElement(deleteTodoItemViewModel);
+            });
         }
 
         private IEnumerator DialogAddResultHandler(TodoDialogViewModel viewModel)
         {
             var addTodoItem = ConvertDialogViewModelToModel(viewModel);
-            var addTodoItemIterator = m_repository.AddTodoItem(addTodoItem);
-            yield return addTodoItemIterator;
-            var addTodoModel = addTodoItemIterator.Current;
-            var addTodoViewModel = ConvertModelToViewModel(addTodoModel);
-            yield return m_view.AddElement(addTodoViewModel);
+            yield return m_repository.AddTodoItem(addTodoItem, (todoItem) =>
+            {
+                var addTodoViewModel = ConvertModelToViewModel(todoItem);
+                m_view.AddElement(addTodoViewModel);
+            });            
         }
 
         private IEnumerator DialogUpdateResultHandler(TodoDialogViewModel viewModel)
         {
             var updateTodoItem = ConvertDialogViewModelToModel(viewModel);
-            var updateTodoItemItarator = m_repository.UpdateTodoItem(updateTodoItem);
-            yield return updateTodoItemItarator;
-            var updateTodoModel = updateTodoItemItarator.Current;
-            var updateTodoViewModel = ConvertModelToViewModel(updateTodoModel);
-            yield return m_view.UpdateElement(updateTodoViewModel);
+            yield return m_repository.UpdateTodoItem(updateTodoItem, (todoItem) =>
+            {
+                var updateTodoViewModel = ConvertModelToViewModel(todoItem);
+                m_view.UpdateElement(updateTodoViewModel);
+            });
         }
 
         private void DialogCancelHandler()

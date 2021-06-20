@@ -1,34 +1,45 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Todo.Entity;
+using Todo.Utils;
+using TodoApi.Pb.Messages.Todo;
 
 namespace Todo.Infrastructures.Todo
 {
     public class TodoClient : ITodoClient
     {
-        public IEnumerator<List<TodoItem>> GetTodoItems()
+        public IEnumerator GetTodoItems(Action<List<TodoItem>> callback)
+        {
+            var request = new TodosGetRequest(callback, OnErrorHandler);
+
+            yield return HttpUtils.Instance.Execute<TodosGetResponse>(request);
+        }
+
+        public IEnumerator GetTodoItemById(long id, Action<TodoItem> callback)
         {
             throw new System.NotImplementedException();
         }
 
-        public IEnumerator<TodoItem> GetTodoItemById(long id)
+        public IEnumerator AddTodoItem(TodoItem todoItem, Action<TodoItem> callback)
         {
             throw new System.NotImplementedException();
         }
 
-        public IEnumerator<TodoItem> AddTodoItem(TodoItem todoItem)
+        public IEnumerator UpdateTodoItem(TodoItem todoItem, Action<TodoItem> callback)
         {
             throw new System.NotImplementedException();
         }
 
-        public IEnumerator<TodoItem> UpdateTodoItem(TodoItem todoItem)
+        public IEnumerator DeleteTodoItem(long id, Action<TodoItem> callback)
         {
             throw new System.NotImplementedException();
         }
 
-        public IEnumerator<TodoItem> DeleteTodoItem(long id)
+        void OnErrorHandler(int errorCode, string errorMassage)
         {
-            throw new System.NotImplementedException();
+            UnityEngine.Debug.LogError($"onerror {errorCode} {errorMassage}");
         }
     }
 }
