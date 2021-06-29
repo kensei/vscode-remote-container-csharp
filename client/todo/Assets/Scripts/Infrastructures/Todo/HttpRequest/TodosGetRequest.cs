@@ -9,7 +9,6 @@ using TodoApi.Pb.Messages.Todo;
 
 public class TodosGetRequest : IHttpRequest
 {
-    private Dictionary<string, object> m_requestParam;
     private Action<List<TodoItem>> m_successHandler;
     private Action<int, string> m_errorHandler;
 
@@ -23,9 +22,9 @@ public class TodosGetRequest : IHttpRequest
         get { return "TodoItems"; }
     }
 
-    public Dictionary<string, object> RequestParam
+    public IRequestParam RequestParam
     {
-        get { return m_requestParam; }
+        get { return null; }
     }
 
     public TodosGetRequest(Action<List<TodoItem>> successHandler, Action<int, string> errorHandler)

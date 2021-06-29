@@ -42,14 +42,21 @@ namespace Todo.Views.Todo.Views
         {
             Debug.Log("OnClickOkButton");
             var result = new TodoDialogViewModel { Id = m_oridinalTodoItem.Id, Title = m_title.text, IsComplete = m_isComplete.isOn };
-            StartCoroutine(m_dialogOkHandler(result));
-            this.gameObject.SetActive(false);
+
+            StartCoroutine(OnClickOk(result));
         }
 
         public void OnClickCancelButton()
         {
             Debug.Log("OnClickCancelButton");
             m_dialogCancelHandler();
+            this.gameObject.SetActive(false);
+        }
+
+        private IEnumerator OnClickOk(TodoDialogViewModel result)
+        {
+            yield return StartCoroutine(m_dialogOkHandler(result));
+
             this.gameObject.SetActive(false);
         }
     }

@@ -38,8 +38,6 @@ namespace Todo.Utils
 
         public IEnumerator Execute<PBResponse>(IHttpRequest request) where PBResponse : IMessage<PBResponse>, new()
         {
-            var form = SetupRequestParam(request);
-
             switch (request.Method)
             {
                 case EnumHttpMethod.GET:
@@ -49,22 +47,26 @@ namespace Todo.Utils
                     }
                     break;
                 case EnumHttpMethod.POST:
-                    using (UnityWebRequest webRequest = UnityWebRequest.Post(BASE_URI + request.URI, form))
+                    using (UnityWebRequest webRequest = UnityWebRequest.Post(BASE_URI + request.URI, ""))
                     {
+                        SetupHttpRequest(request, webRequest);
+                        webRequest.uploadHandler = new UploadHandlerRaw(ToByteArray(request.RequestParam.ToJson()));
+                        webRequest.downloadHandler = new DownloadHandlerBuffer();
                         yield return ExecuteHttpRequest<PBResponse>(request, webRequest);
                     }
                     break;
                 case EnumHttpMethod.PUT:
-                    using (UnityWebRequest webRequest = UnityWebRequest.Post(BASE_URI + request.URI, form))
+                    using (UnityWebRequest webRequest = UnityWebRequest.Post(BASE_URI + request.URI, request.RequestParam.ToJson()))
                     {
-                        webRequest.method = "PUT";
+                        SetupHttpRequest(request, webRequest);
                         yield return ExecuteHttpRequest<PBResponse>(request, webRequest);
                     }
                     break;
                 case EnumHttpMethod.DELETE:
                     using (UnityWebRequest webRequest = UnityWebRequest.Delete(BASE_URI + request.URI))
                     {
-                        webRequest.method = "PUT";
+                        SetupHttpRequest(request, webRequest);
+                        webRequest.downloadHandler = new DownloadHandlerBuffer();
                         yield return ExecuteHttpRequest<PBResponse>(request, webRequest);
                     }
                     break;
@@ -75,7 +77,7 @@ namespace Todo.Utils
 
         private IEnumerator ExecuteHttpRequest<PBResponse>(IHttpRequest request, UnityWebRequest webRequest) where PBResponse : IMessage<PBResponse>, new()
         {
-            SetupHttpRequest(webRequest);
+            SetupHttpRequest(request, webRequest);
 
             yield return webRequest.SendWebRequest();
 
@@ -116,23 +118,15 @@ namespace Todo.Utils
             return res;
         }
 
-        private WWWForm SetupRequestParam(IHttpRequest request)
+        private void SetupHttpRequest(IHttpRequest request, UnityWebRequest webRequest)
         {
-            var form = new WWWForm();
-            if (request.RequestParam != null)
-            {
-                foreach (var requestParam in request.RequestParam)
-                {
-                    form.AddField(requestParam.Key, requestParam.Value.ToString());
-                }
-            }
-            return form;
+            webRequest.SetRequestHeader("Content-Type", "application/json");
+            webRequest.timeout = TIME_OUT;
         }
 
-        private void SetupHttpRequest(UnityWebRequest request)
+        private byte[] ToByteArray(string json)
         {
-            request.SetRequestHeader("Content-Type", "application/x-protobuf");
-            request.timeout = TIME_OUT;
+            return Encoding.UTF8.GetBytes(json);
         }
 
         private void HandleHttpRequst(UnityWebRequest.Result result)

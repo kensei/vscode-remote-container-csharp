@@ -12,7 +12,7 @@ namespace Todo.Common
 
         public string URI { get; }
 
-        public Dictionary<string, object> RequestParam { get; }
+        public IRequestParam RequestParam { get; }
 
         public void OnError(int errorCode, string errorMassage);
 
